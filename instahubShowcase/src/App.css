@@ -1,0 +1,55 @@
+/* ---- Global layout constants ---- */
+:root {
+  /* Keep in sync with Sidebar inline width */
+  --sidebar-w: 220px;
+}
+
+/* Reset-ish bits that won't fight Bootstrap */
+html, body, #root {
+  height: 100%;
+}
+body {
+  background: #f5f7fb; /* page bg used across app */
+}
+
+/* ---- Fixed Sidebar ---- */
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  z-index: 1020;                 /* above charts, below modals */
+  overflow: hidden;              /* keep it tidy */
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ---- Main area sits to the right of the fixed sidebar ---- */
+.app-main {
+  margin-left: var(--sidebar-w); /* create space for sidebar */
+  padding: 24px;                 /* consistent page gutter */
+  min-width: 0;                  /* avoid flex overflow bugs */
+}
+
+/* ---- Centering wrapper you can reuse per page ---- */
+.page-wrap {
+  max-width: 1200px;             /* wide, uses your white space */
+  margin: 0 auto;
+}
+
+/* Alerts can be a touch narrower if you prefer */
+.alerts-page .page-wrap {
+  max-width: 1040px;
+}
+
+/* Cards look nicer consistently */
+.card {
+  border: 0;
+  border-radius: 12px;
+}
+
+/* Small helper to stop list cards from stretching too tall */
+.card-body-compact {
+  padding: 0.75rem 1rem;
+}
+
