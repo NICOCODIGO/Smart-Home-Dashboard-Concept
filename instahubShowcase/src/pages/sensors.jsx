@@ -1,13 +1,11 @@
+// src/pages/sensors.jsx
 import React, { useState, useEffect } from "react";
 const toF = (c) => (c * 9) / 5 + 32;
 
-export default function Sensors({ rooms, isCelsius, setIsCelsius }) {
-  // Holds simulated data (CO₂, voltage, noise, etc.) + trend info
+export default function Sensors({ rooms, isCelsius }) {
   const [simData, setSimData] = useState([]);
 
-  // Initialize once, then update every 10 seconds
   useEffect(() => {
-    // Create baseline data
     const initializeSimData = () =>
       rooms.map((room) => ({
         co2: Math.round(350 + Math.random() * 250),
@@ -28,15 +26,12 @@ export default function Sensors({ rooms, isCelsius, setIsCelsius }) {
       setSimData((prev) =>
         prev.map((s, i) => {
           const room = rooms[i];
-
-          // Compare new vs previous temperature and humidity
           const tempTrend =
             room.temperatureC > s.tempPrev
               ? "up"
               : room.temperatureC < s.tempPrev
               ? "down"
               : "steady";
-
           const humTrend =
             room.humidityPct > s.humPrev
               ? "up"
@@ -44,7 +39,6 @@ export default function Sensors({ rooms, isCelsius, setIsCelsius }) {
               ? "down"
               : "steady";
 
-          // Generate updated auxiliary sensor data
           return {
             ...s,
             co2: Math.round(350 + Math.random() * 250),
@@ -69,29 +63,11 @@ export default function Sensors({ rooms, isCelsius, setIsCelsius }) {
 
   return (
     <div className="container py-3">
-      {/* Header + Unit Toggle */}
+      {/* Header */}
       <div className="d-flex align-items-center justify-content-between mb-4">
         <h4 className="fw-bold m-0">
           <i className="bi bi-speedometer2 me-2"></i> Advanced Sensor Diagnostics
         </h4>
-
-        {/* Toggle °F / °C */}
-        <div className="btn-group" role="group" aria-label="Unit toggle">
-          <button
-            type="button"
-            className={`btn btn-sm ${!isCelsius ? "btn-primary" : "btn-outline-primary"}`}
-            onClick={() => setIsCelsius(false)}
-          >
-            F
-          </button>
-          <button
-            type="button"
-            className={`btn btn-sm ${isCelsius ? "btn-primary" : "btn-outline-primary"}`}
-            onClick={() => setIsCelsius(true)}
-          >
-            C
-          </button>
-        </div>
       </div>
 
       {/* Data Table */}
@@ -126,36 +102,26 @@ export default function Sensors({ rooms, isCelsius, setIsCelsius }) {
                     <i className="bi bi-house-door me-2 text-primary"></i>
                     {room.name}
                   </td>
-
-                  {/* Temperature */}
                   <td>
                     {temp.toFixed(1)}{" "}
                     {s.tempTrend !== "steady" && (
                       <i
                         className={`bi bi-arrow-${s.tempTrend} ${
-                          s.tempTrend === "up"
-                            ? "text-danger"
-                            : "text-info"
+                          s.tempTrend === "up" ? "text-danger" : "text-info"
                         }`}
                       ></i>
                     )}
                   </td>
-
-                  {/* Humidity */}
                   <td>
                     {room.humidityPct}%{" "}
                     {s.humTrend !== "steady" && (
                       <i
                         className={`bi bi-arrow-${s.humTrend} ${
-                          s.humTrend === "up"
-                            ? "text-warning"
-                            : "text-primary"
+                          s.humTrend === "up" ? "text-warning" : "text-primary"
                         }`}
                       ></i>
                     )}
                   </td>
-
-                  {/* Light */}
                   <td>
                     <div className="progress" style={{ height: "6px" }}>
                       <div
@@ -165,19 +131,14 @@ export default function Sensors({ rooms, isCelsius, setIsCelsius }) {
                     </div>
                     <small>{room.lightLevelPct ?? 50}%</small>
                   </td>
-
                   <td>{room.kWhToday.toFixed(2)}</td>
                   <td>{s.voltage}</td>
                   <td>{s.current}</td>
-
-                  {/* CO₂ */}
                   <td>
                     <span className={`badge ${s.co2 > 550 ? "bg-danger" : "bg-success"}`}>
                       {s.co2}
                     </span>
                   </td>
-
-                  {/* Noise */}
                   <td>
                     <span
                       className={`badge ${s.noise > 60 ? "bg-warning text-dark" : "bg-secondary"}`}
@@ -185,8 +146,6 @@ export default function Sensors({ rooms, isCelsius, setIsCelsius }) {
                       {s.noise}
                     </span>
                   </td>
-
-                  {/* Battery */}
                   <td>
                     <div className="progress" style={{ height: "6px" }}>
                       <div
@@ -202,8 +161,6 @@ export default function Sensors({ rooms, isCelsius, setIsCelsius }) {
                     </div>
                     <small>{s.battery}%</small>
                   </td>
-
-                  {/* Status */}
                   <td>
                     <span className={`badge ${s.online ? "bg-success" : "bg-danger"}`}>
                       {s.online ? "Online" : "Offline"}

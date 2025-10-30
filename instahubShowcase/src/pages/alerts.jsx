@@ -85,12 +85,12 @@ export default function Alerts() {
 
   /* live arrival of alerts & activity one by one */
   useEffect(() => {
-    // add one alert every 30 seconds
-    const alertInterval = setInterval(() => {
+    const alertInterval = setInterval(() => { // add one alert every 20 seconds
       setAlerts((prev) => [makeAlert(), ...prev].slice(0, 12));
-    }, 30_000);
 
-    // ACTIVITY LOG: reveal one static activity every 30 seconds
+    }, 20000); //THIS DECIDES THE SPEED OF ALERT POPPING UP
+
+    // ACTIVITY LOG: reveal one static activity every 20 seconds
     let idx = 0;
     const actInterval = setInterval(() => {
       if (idx < staticActivity.length) {
@@ -99,7 +99,7 @@ export default function Alerts() {
       } else {
         clearInterval(actInterval);
       }
-    }, 30000);
+    }, 20000); //THIS DECIDES THE SPEED OF ACTIVITY LOG POPPING UP
 
     return () => {
       clearInterval(alertInterval);
@@ -195,7 +195,7 @@ export default function Alerts() {
               ))}
             </ul>
             <div className="card-footer text-center small text-muted">
-              Alerts refresh every <strong>30 seconds</strong> — newest first.
+              Alerts refresh every <strong>20 seconds</strong> — newest first.
             </div>
           </div>
         </div>
@@ -234,7 +234,7 @@ export default function Alerts() {
               ))}
             </ul>
             <div className="card-footer text-muted small text-center">
-              Activity logs load every <strong>30 seconds</strong> — newest first.
+              Activity logs load every <strong>20 seconds</strong> — newest first.
             </div>
           </div>
         </div>
