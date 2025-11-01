@@ -1,11 +1,12 @@
 // diagnostucs screen
 
 import React, { useState, useEffect } from "react";
-const toF = (c) => (c * 9) / 5 + 32; //helper to convert Celsius to Fahrenheit
+const toF = (c) => (c * 9) / 5 + 32; //helper to convert Celsius to Fahrenheit if user chooses to
 
-export default function Sensors({ rooms, isCelsius }) {
-  const [simData, setSimData] = useState([]);
+export default function Sensors({ rooms, isCelsius }) { //React component (reusable table) that displays Room and their live values coming from app.jsx, isCelsius is a boolean whether to show temperature in C or F
+  const [simData, setSimData] = useState([]); //this invents extra data for CO2, noise, voltage, current battery and online status
 
+  // Builds set of reading data for each room
   useEffect(() => {
     const initializeSimData = () =>
       rooms.map((room) => ({
@@ -23,6 +24,7 @@ export default function Sensors({ rooms, isCelsius }) {
 
     setSimData(initializeSimData());
 
+    //turns the reading data into live data that updates every 10 second 
     const interval = setInterval(() => {
       setSimData((prev) =>
         prev.map((s, i) => {
@@ -40,7 +42,7 @@ export default function Sensors({ rooms, isCelsius }) {
               ? "down"
               : "steady";
 
-          return {
+          return {  // return a new object with updated randpm diagnostics + updated "previous" values
             ...s,
             co2: Math.round(350 + Math.random() * 250),
             noise: Math.round(30 + Math.random() * 40),
@@ -57,13 +59,14 @@ export default function Sensors({ rooms, isCelsius }) {
       );
     }, 10000);
 
-    return () => clearInterval(interval);
+      //cleans up when user leaves the page 
+    return () => clearInterval(interval); 
   }, [rooms]);
-
-  if (!rooms || rooms.length === 0) return <p>No sensor data available.</p>;
-
   return (
+
+    // the page tables text, and apperance is created from here and now on 
     <div className="container py-3">
+
       {/* Header */}
       <div className="d-flex align-items-center justify-content-between mb-4">
         <h4 className="fw-bold m-0">
@@ -71,9 +74,13 @@ export default function Sensors({ rooms, isCelsius }) {
         </h4>
       </div>
 
-      {/* Data Table */}
+      {/* The div table layout is created */}
       <div className="table-responsive">
-        <table className="table table-striped align-middle shadow-sm">
+
+        {/*The table is created inside the layout */}
+        <table className="table table-striped align-middle shadow-sm"> 
+
+          {/* The small black box that appears on top of table and the text appearing in it*/}
           <thead className="table-dark text-center">
             <tr>
               <th>Room</th>
@@ -90,6 +97,7 @@ export default function Sensors({ rooms, isCelsius }) {
             </tr>
           </thead>
 
+          {/* The box below the black box is inserted with data and text */}
           <tbody className="text-center">
             {rooms.map((room, i) => {
               const s = simData[i];
@@ -98,11 +106,15 @@ export default function Sensors({ rooms, isCelsius }) {
               const temp = isCelsius ? room.temperatureC : toF(room.temperatureC);
 
               return (
+
+                // targets all room name to be displayed first left to right
                 <tr key={room.name}>
-                  <td className="fw-semibold text-start">
+                  <td className="fw-semibold text-start"> 
                     <i className="bi bi-house-door me-2 text-primary"></i>
                     {room.name}
                   </td>
+
+                 
                   <td>
                     {temp.toFixed(1)}{" "}
                     {s.tempTrend !== "steady" && (
@@ -113,6 +125,7 @@ export default function Sensors({ rooms, isCelsius }) {
                       ></i>
                     )}
                   </td>
+
                   <td>
                     {room.humidityPct}%{" "}
                     {s.humTrend !== "steady" && (
@@ -123,6 +136,7 @@ export default function Sensors({ rooms, isCelsius }) {
                       ></i>
                     )}
                   </td>
+
                   <td>
                     <div className="progress" style={{ height: "6px" }}>
                       <div
@@ -132,6 +146,7 @@ export default function Sensors({ rooms, isCelsius }) {
                     </div>
                     <small>{room.lightLevelPct ?? 50}%</small>
                   </td>
+
                   <td>{room.kWhToday.toFixed(2)}</td>
                   <td>{s.voltage}</td>
                   <td>{s.current}</td>
@@ -173,7 +188,8 @@ export default function Sensors({ rooms, isCelsius }) {
           </tbody>
         </table>
       </div>
-
+      
+      {/* Basic p undernathc table */}
       <p className="text-muted small text-center mt-3">
         Live diagnostic data — updates every 10 seconds.
       </p>

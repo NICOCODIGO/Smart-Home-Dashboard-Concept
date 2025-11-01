@@ -1,4 +1,4 @@
-// src/pages/settings.jsx
+// Lesson to myself: DO NOT CHANGE THE DIV NAMES, THEYRE FOR BOOTSTRAPS TO STYLE THEM 
 import React from "react";
 import "animate.css";
 
