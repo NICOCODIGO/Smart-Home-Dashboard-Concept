@@ -1,6 +1,18 @@
 # FRONT-END PROJECT
-<h1>🏠 SmartSense Dashboard</h1>
+# [🏠 SmartSense Dashboard](https://smart-home-dashboard-concept.vercel.app)
 In this project I have made a modern, interactive Smart Home Monitoring Dashboard built with React and bootstrap of my vision/concept. This Simulates live IoT sensors, system alerts, and user-controlled settings in a clean, professional layout. 
+
+<img width="1436" height="848" alt="dashboard ss" src="https://github.com/user-attachments/assets/16c8d535-416f-4adf-baa9-1dfdd8919de5" />
+
+<img width="1440" height="848" alt="sensor" src="https://github.com/user-attachments/assets/e2758d22-4a0e-4db7-9ae1-89abcf7b66a3" />
+
+<img width="1435" height="850" alt="reports" src="https://github.com/user-attachments/assets/ac5f5531-49c7-41e4-9f25-96a8b4582cb4" />
+
+<img width="1436" height="848" alt="alerts" src="https://github.com/user-attachments/assets/49180380-960d-478d-9a91-bef7ca831cfe" />
+
+<img width="1436" height="847" alt="settings" src="https://github.com/user-attachments/assets/68d18552-9d45-459e-a04e-7e8d1cfbf045" />
+
+
 <h2>🚀 Features</h2>
 
 🌡️ **Real-Time Dashboard** – Live sensor updates (temperature, humidity, energy).
