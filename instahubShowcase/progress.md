@@ -5,15 +5,23 @@ Ive built a react app that that simulates an IoT building dashboard (like someth
 React gives me reusable components that render live data from JavaScript objects.
 Bootstrap gives me a responsive grid layout and ready-made design styles.
 
-src/
- ├── App.jsx                ← main layout
- ├── data/
- │    └── mockData.js       ← fake IoT sensor data (no backend)
- └── components/
-      ├── Header.jsx        ← top bar (username + F/C toggle)
-      ├── SensorCards.jsx   ← main sensor summary cards
-      ├── LineChart.jsx     ← weekly temperature/energy chart
-      └── RoomStats.jsx     ← detailed per-room metrics
+index.html - The “shell” of your website — just a blank page with a <div id="root"> where React will insert everything.
+
+main.jsx - The first JavaScript file that “boots up” your app — connects React to the HTML and loads App.jsx.
+
+App.jsx - The “brain” that connects all pages, holds shared data, updates sensors every few seconds, and switches between Dashboard, Alerts, Reports, etc.
+
+dashboard.jsx - The main “home” screen — shows top-level stats, charts, and room data.
+
+reports.jsx - The analytics page — builds graphs, charts, and comparisons using simulated energy data. 
+
+sensors.jsx - The technical diagnostics table showing live voltage, current, CO₂, noise, and battery levels for each room.
+
+alerts.jsx - The real-time notifications center — fake alerts and activity logs appear every 20 seconds to simulate live events.
+
+settings.jsx - Where users can toggle Celsius/Fahrenheit and (later) will manage more preferences.
+
+mockdata.jsx - Fake sensor and room data that drives the entire dashboard.
 
 Created mock data, necessary since this is just front end work.
 
@@ -24,16 +32,15 @@ You used arrays and objects to model sensors, rooms, and charts:
 	•	Arrays ([]) for lists (e.g., rooms)
 	•	Objects ({}) for key–value pairs (e.g., a single room’s sensors)
 
-COMPONENTS AND UI:
-Each component has its own purpose, props, and data.
+In the sensors page I made all the date in the table to be changed timely as a way to show that how it would look like if something was chaneged, just to show off the animation 
 
+React makes multple pages to look "connected" (no backend) by using internal states
 
-Also the "Total so far: will be higher than the "Energy today" card since the energy today is the building
-while the energy todays sums up all rooms sensors data
+Dashboard looks "live" becasue of setInterval() and useEffect(), making numbers move and update, almost like the IoT is sending info
 
-“The building total and per-room totals are intentionally simulated separately to mimic real-world IoT data variance — where aggregated sensor data may not exactly match main meter readings due to drift or latency.”
+React components splits big UI into small, reusable parts, 
 
-its realism, real-world drift 
+Props passed data between parent and child components 
 
 
 

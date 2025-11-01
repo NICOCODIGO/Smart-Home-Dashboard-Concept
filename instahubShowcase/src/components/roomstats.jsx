@@ -26,6 +26,7 @@ export default function RoomStats({ isCelsius, rooms, lastUpdated }) {
             <div className="col-lg-4 col-md-6" key={r.name}>
               <div className="card shadow-sm h-100">
                 <div className="card-body">
+
                   {/* Header: room name + ENERGY badge */}
                   <div className="d-flex justify-content-between align-items-center mb-2">
                     <h6 className="mb-0">{r.name}</h6>
@@ -61,7 +62,7 @@ export default function RoomStats({ isCelsius, rooms, lastUpdated }) {
                     </div>
                   </div>
 
-                  {/* Motion + AQI */}
+                  {/* Motion, AQI */}
                   <div className="d-flex justify-content-between align-items-center mt-3">
                     <span
                       className={`badge ${

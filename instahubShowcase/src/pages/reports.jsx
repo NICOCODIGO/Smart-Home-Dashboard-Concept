@@ -30,12 +30,12 @@ export default function Reports({ rooms }) {
     [rooms]
   );
 
-  //adds room energy values together and finds which room used the most energy
+  // calculate total energy today and find the top room
   const totalEnergy = roomEnergyData.reduce((sum, r) => sum + r.value, 0);
   const topRoom = roomEnergyData.reduce((a, b) => (a.value > b.value ? a : b), {});
 
 
-  //build a dataset for line chart (This Week or This Month dropdown)
+  //dataset for line chart (This Week or This Month dropdown)
   const trendData = useMemo(() => {
     const labels =
       range === "week"
@@ -47,10 +47,10 @@ export default function Reports({ rooms }) {
     }));
   }, [range, totalEnergy]);
 
-  //calculations for summary cards at the top
-  const yesterdayEnergy = (totalEnergy * 0.9).toFixed(2);
-  const diff = (totalEnergy - yesterdayEnergy).toFixed(2);
-  const diffPercent = ((diff / yesterdayEnergy) * 100).toFixed(1);
+  //Calculates the summary numbers for the top report cards 
+  const yesterdayEnergy = (totalEnergy * 0.9).toFixed(2); //pretending that energy was used less the day before (0.9)
+  const diff = (totalEnergy - yesterdayEnergy).toFixed(2); //difference between today (totalEnergy) and yesterday
+  const diffPercent = ((diff / yesterdayEnergy) * 100).toFixed(1); //percentage difference between today and yesterday
 
   return (
     <div className="container-fluid px-5 py-4" style={{ maxWidth: "2000px" }}>
@@ -72,30 +72,38 @@ export default function Reports({ rooms }) {
             onChange={(e) => setRange(e.target.value)}
             style={{ width: "160px" }}
           >
+            {/* drop down menu created here */}
             <option value="week">This Week</option>
             <option value="month">This Month</option>
           </select>
-
+  
+          {/* fake export button that does nothing */}
           <button className="btn btn-outline-secondary btn-sm">
             <i className="bi bi-download me-1"></i> Export
           </button>
         </div>
       </div>
 
-      {/* SUMMARY CARDS */}
+      {/* Summary Cards Division Area is created */}
       <div className="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4 mb-4">
+
+        {/* Card 1 */}
         <div className="col">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Total Energy Today</h6>
             <h2 className="fw-bold">{totalEnergy.toFixed(2)} kWh</h2>
           </div>
         </div>
+
+        {/* Card 2 */}
         <div className="col">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Yesterday’s Total</h6>
             <h2>{yesterdayEnergy} kWh</h2>
           </div>
         </div>
+
+        {/* Card 3 */}
         <div className="col">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Change</h6>
@@ -105,6 +113,8 @@ export default function Reports({ rooms }) {
             </h2>
           </div>
         </div>
+
+        {/* Card 4 */}
         <div className="col">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Top Room</h6>
@@ -116,7 +126,7 @@ export default function Reports({ rooms }) {
 
 
 
-      {/* CHARTS ROW */}
+      {/*Charts Row division area layout is created here*/}
       <div className="row g-4 mb-4">
 
 
@@ -126,19 +136,21 @@ export default function Reports({ rooms }) {
             <h5 className="fw-bold text-center mb-3">Room Energy Distribution</h5>
             <div style={{ width: "100%", height: "400px" }}>
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart> {/*from Rechart.js */}
                   <Pie
-  data={roomEnergyData}
-  dataKey="value"
-  nameKey="name"
-  cx="50%"
-  cy="50%"
-  innerRadius="40%"
-  outerRadius="70%"
-  labelLine={false}
-  label={({ name, percent }) =>
-    `${(percent * 100).toFixed(1)}%`
-  } // Only % inside each slice
+                  s
+                  data={roomEnergyData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius="40%"
+                  outerRadius="70%"
+                  labelLine={false}
+                  label={({ name, percent }) =>
+                    `${(percent * 100).toFixed(1)}%`
+        
+  } 
 >
                     {roomEnergyData.map((entry, index) => (
                       <Cell key={index} fill={COLORS[index % COLORS.length]} />

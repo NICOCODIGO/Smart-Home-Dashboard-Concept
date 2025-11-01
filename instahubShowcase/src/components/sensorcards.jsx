@@ -18,6 +18,7 @@ function SensorCards({ isCelsius, sensors }) {
 
   return (
     <div className="row g-3 mb-4">
+      
       {/* Temperature */}
       <div className="col-md-3">
         <div className="card text-center bg-primary text-white shadow-sm">
