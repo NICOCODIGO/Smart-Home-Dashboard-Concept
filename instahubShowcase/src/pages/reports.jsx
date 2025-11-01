@@ -2,26 +2,18 @@
 
 import React, { useState, useMemo } from "react";
 import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  PieChart, Pie, Cell,
+  Tooltip, ResponsiveContainer, Legend,
+  LineChart, Line, XAxis,
+  YAxis, CartesianGrid,
 } from "recharts";
 
-// rooms data is passed from App.jsx
-export default function Reports({ rooms }) { 
-  const [range, setRange] = useState("week");
+export default function Reports({ rooms }) { // rooms data is passed from App.jsx: "Give me the rooms data and ill build reports from it with charts and report cards"
+  const [range, setRange] = useState("week"); //range = either "week" or "month", default is week, setRange is used to change the range when user selects from dropdown
   const COLORS = ["#007bff", "#28a745", "#ffc107", "#dc3545", "#6610f2", "#20c997"];
 
-  //convert rooms data into format suitable for pie chart
-  const roomEnergyData = useMemo(
+  //build a dataset for pie chart showing each room's energy usage today, taking data from mockdata.js file
+  const roomEnergyData = useMemo(  
     () =>
       rooms.map((r) => ({
         name: r.name,
@@ -30,14 +22,14 @@ export default function Reports({ rooms }) {
     [rooms]
   );
 
-  //adds room energy values together and finds which room used the most energy
-  const totalEnergy = roomEnergyData.reduce((sum, r) => sum + r.value, 0);
-  const topRoom = roomEnergyData.reduce((a, b) => (a.value > b.value ? a : b), {});
+  // calculate total energy today and find the top room
+  const totalEnergy = roomEnergyData.reduce((sum, r) => sum + r.value, 0); //sum up all room energy values to get total energy
+  const topRoom = roomEnergyData.reduce((a, b) => (a.value > b.value ? a : b), {}); //find the room with highest energy value so we can show it in a report card (Kitchen used the most: 7.10 kWh)
 
 
-  //build a dataset for line chart (This Week or This Month dropdown)
+  //dataset for line chart (This Week or This Month dropdown)
   const trendData = useMemo(() => {
-    const labels =
+    const labels =  
       range === "week"
         ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         : Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`);
@@ -47,10 +39,10 @@ export default function Reports({ rooms }) {
     }));
   }, [range, totalEnergy]);
 
-  //calculations for summary cards at the top
-  const yesterdayEnergy = (totalEnergy * 0.9).toFixed(2);
-  const diff = (totalEnergy - yesterdayEnergy).toFixed(2);
-  const diffPercent = ((diff / yesterdayEnergy) * 100).toFixed(1);
+  //Calculates the summary numbers for the top report cards 
+  const yesterdayEnergy = (totalEnergy * 0.9).toFixed(2); //pretending that energy was used less the day before (0.9) 
+  const diff = (totalEnergy - yesterdayEnergy).toFixed(2); //difference between today (totalEnergy) and yesterday
+  const diffPercent = ((diff / yesterdayEnergy) * 100).toFixed(1); //percentage difference between today and yesterday
 
   return (
     <div className="container-fluid px-5 py-4" style={{ maxWidth: "2000px" }}>
@@ -59,65 +51,72 @@ export default function Reports({ rooms }) {
      {/* Below are the layout components using bootstrap */}
 
       {/* HEADER */}
-      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <h3 className="fw-bold mb-0">
-          <i className="bi bi-graph-up-arrow me-2"></i> Energy Reports & Analytics
+      <div className="Header flex box">
+        <h3 className="head style">
+          <i className="Text"></i> Energy Reports & Analytics
         </h3>
 
         {/* RANGE SELECTOR & EXPORT BUTTON */}
-        <div className="d-flex align-items-center gap-2">
+        <div className="drop down and fake export button">
           <select
-            className="form-select form-select-sm"
+            className="text box inside" 
             value={range}
             onChange={(e) => setRange(e.target.value)}
             style={{ width: "160px" }}
           >
-            <option value="week">This Week</option>
+            <option value="week">This Week</option> {/*The actual drop down*/}
             <option value="month">This Month</option>
           </select>
 
-          <button className="btn btn-outline-secondary btn-sm">
-            <i className="bi bi-download me-1"></i> Export
+          <button className="text boxm">
+            <i className="export"></i> Export {/*fake export button*/}
           </button>
         </div>
       </div>
 
-      {/* SUMMARY CARDS */}
-      <div className="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4 mb-4">
-        <div className="col">
+      {/* Summary Cards Division Area */}
+      <div className="summary cards top">
+
+        {/* Card 1 */}
+        <div className="card">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Total Energy Today</h6>
-            <h2 className="fw-bold">{totalEnergy.toFixed(2)} kWh</h2>
+            <h2 className="fw-bold">{totalEnergy.toFixed(2)} kWh</h2> 
           </div>
         </div>
+
+        {/* Card 2 */}
         <div className="col">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Yesterday’s Total</h6>
-            <h2>{yesterdayEnergy} kWh</h2>
+            <h2>{yesterdayEnergy} kWh</h2> 
           </div>
         </div>
+
+        {/* card 3 */}
         <div className="col">
-          <div className="card shadow-sm border-0 p-4 text-center h-100">
-            <h6 className="text-muted">Change</h6>
+          <div className="text box">
+            <h6 className="text">Change</h6>
             <h2 className={diff > 0 ? "text-danger" : "text-success"}>
               {diff > 0 ? "+" : ""}
               {diffPercent}%
             </h2>
           </div>
         </div>
+
+        {/* card 4 */}
         <div className="col">
-          <div className="card shadow-sm border-0 p-4 text-center h-100">
-            <h6 className="text-muted">Top Room</h6>
-            <h4 className="fw-semibold">{topRoom.name}</h4>
+          <div className="text box">
+            <h6 className="text">Top Room</h6>
+            <h4 className="text-semibold">{topRoom.name}</h4>
             <small className="text-muted">{topRoom.value} kWh</small>
           </div>
         </div>
       </div>
 
 
-
-      {/* CHARTS ROW */}
-      <div className="row g-4 mb-4">
+      {/* Charts Row division area */}
+      <div className="pie chart and graph">
 
 
         {/* PIE CHART */}
@@ -128,17 +127,19 @@ export default function Reports({ rooms }) {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-  data={roomEnergyData}
-  dataKey="value"
-  nameKey="name"
-  cx="50%"
-  cy="50%"
-  innerRadius="40%"
-  outerRadius="70%"
-  labelLine={false}
-  label={({ name, percent }) =>
-    `${(percent * 100).toFixed(1)}%`
-  } // Only % inside each slice
+                  data={roomEnergyData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius="40%"
+                  outerRadius="70%"
+                  labelLine={false}
+                  label={({ name, percent }) =>
+                    `${(percent * 100).toFixed(1)}%`
+                }
+
+  
 >
                     {roomEnergyData.map((entry, index) => (
                       <Cell key={index} fill={COLORS[index % COLORS.length]} />
