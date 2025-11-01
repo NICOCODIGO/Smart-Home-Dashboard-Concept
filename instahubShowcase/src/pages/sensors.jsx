@@ -1,13 +1,11 @@
 // diagnostucs screen
 
 import React, { useState, useEffect } from "react";
-const toF = (c) => (c * 9) / 5 + 32; //helper to convert Celsius to Fahrenheit is user chosses to 
+const toF = (c) => (c * 9) / 5 + 32; //helper to convert Celsius to Fahrenheit
 
-export default function Sensors({ rooms, isCelsius }) { //React component (reasuable table) that displays Room and their live values coming from app.jsx, isCelsius is a boolean whether to show temperature in Celsius or Fahrenheit
-  const [simData, setSimData] = useState([]); //this invents extra data for CO2, noise, voltage, current, battery, online status
+export default function Sensors({ rooms, isCelsius }) {
+  const [simData, setSimData] = useState([]);
 
-
-  // Builds first set of readings for each room
   useEffect(() => {
     const initializeSimData = () =>
       rooms.map((room) => ({
@@ -24,8 +22,7 @@ export default function Sensors({ rooms, isCelsius }) { //React component (reasu
       }));
 
     setSimData(initializeSimData());
-    
-      // Turns the readings into live data that updates every 10 seconds
+
     const interval = setInterval(() => {
       setSimData((prev) =>
         prev.map((s, i) => {
@@ -43,7 +40,6 @@ export default function Sensors({ rooms, isCelsius }) { //React component (reasu
               ? "down"
               : "steady";
 
-           // return a new object with updated random diagnostics + updated “previous” values
           return {
             ...s,
             co2: Math.round(350 + Math.random() * 250),
@@ -61,25 +57,24 @@ export default function Sensors({ rooms, isCelsius }) { //React component (reasu
       );
     }, 10000);
 
-    // cleans up when user leaves the page, stops the interval (probably should delete this to keep it realistically running?)
     return () => clearInterval(interval);
   }, [rooms]);
-  return ( //I probably should add an "if" safety check just in case but for the sake of this project, its probably not neccesary
-    
-    // the page tables text, and appearances is created from here and now on 
-    <div className="the table"> {/* Name of the entire table page */}
 
+  if (!rooms || rooms.length === 0) return <p>No sensor data available.</p>;
+
+  return (
+    <div className="container py-3">
       {/* Header */}
-      <div className="header">
-        <h4 className="Bold text">
-          <i className="Text"></i> Advanced Sensor Diagnostics 
+      <div className="d-flex align-items-center justify-content-between mb-4">
+        <h4 className="fw-bold m-0">
+          <i className="bi bi-speedometer2 me-2"></i> Advanced Sensor Diagnostics
         </h4>
       </div>
 
       {/* Data Table */}
-      <div className="Data table">
-        <table className="layouts">
-          <thead className="text inside the table">
+      <div className="table-responsive">
+        <table className="table table-striped align-middle shadow-sm">
+          <thead className="table-dark text-center">
             <tr>
               <th>Room</th>
               <th>Temperature ({isCelsius ? "°C" : "°F"})</th>
@@ -95,7 +90,7 @@ export default function Sensors({ rooms, isCelsius }) { //React component (reasu
             </tr>
           </thead>
 
-          <tbody className="room names in bold">
+          <tbody className="text-center">
             {rooms.map((room, i) => {
               const s = simData[i];
               if (!s) return null;
@@ -108,19 +103,16 @@ export default function Sensors({ rooms, isCelsius }) { //React component (reasu
                     <i className="bi bi-house-door me-2 text-primary"></i>
                     {room.name}
                   </td>
-
-                  {/* display temperature with trend arrow once the data changes */}
                   <td>
                     {temp.toFixed(1)}{" "}
                     {s.tempTrend !== "steady" && (
                       <i
                         className={`bi bi-arrow-${s.tempTrend} ${
                           s.tempTrend === "up" ? "text-danger" : "text-info"
-                        }`}>
-                      </i>
+                        }`}
+                      ></i>
                     )}
                   </td>
-
                   <td>
                     {room.humidityPct}%{" "}
                     {s.humTrend !== "steady" && (
@@ -181,8 +173,7 @@ export default function Sensors({ rooms, isCelsius }) { //React component (reasu
           </tbody>
         </table>
       </div>
-      
-      {/* Basic p text underneath the table */}
+
       <p className="text-muted small text-center mt-3">
         Live diagnostic data — updates every 10 seconds.
       </p>
