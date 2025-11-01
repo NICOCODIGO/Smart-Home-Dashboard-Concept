@@ -1,14 +1,18 @@
-// src/pages/alerts.jsx
-import React, { useEffect, useMemo, useState } from "react";
-import "animate.css";
+//this page powers the alerts page
 
-/* ----------------------------- helpers & data ----------------------------- */
+import React, { useEffect, useMemo, useState } from "react";
+import "animate.css"; //this page used animated card that fade in and fade out
+
+//helpers data & lookup
+
+//bootsytap colors for different severity levels
 const SEVERITY_COLORS = {
   High: "bg-danger",
   Medium: "bg-warning text-dark",
   Low: "bg-success",
-};
+}; 
 
+//bootstrap icons for different alert types
 const ALERT_ICONS = {
   Power: "bi-lightning-charge",
   Temperature: "bi-thermometer-half",
@@ -18,9 +22,11 @@ const ALERT_ICONS = {
   Online: "bi-wifi",
 };
 
+//This are used in a random alert generator 
 const TYPES = ["Power", "Temperature", "Motion", "CO2", "Offline"];
 const ROOMS = ["Living Room", "Kitchen", "Dining Room", "Bedroom", "Bathroom", "Garage"];
 
+//small reusable component that shows severity level with colored pill (badge) with High, Medium, Low
 function SeverityPill({ level }) {
   return (
     <span className={`badge rounded-pill ${SEVERITY_COLORS[level] || "bg-secondary"}`}>
@@ -29,14 +35,14 @@ function SeverityPill({ level }) {
   );
 }
 
+//helper to get current time as a string
 const nowTime = () => new Date().toLocaleTimeString();
 
-/* Fake alert generator */
+// the engine behind the live alert feed; makes a random alert object, prick random sensor type, rooms, severity level and build a message top right
 function makeAlert() {
   const type = TYPES[Math.floor(Math.random() * TYPES.length)];
   const room = ROOMS[Math.floor(Math.random() * ROOMS.length)];
   const sev = Math.random() < 0.25 ? "High" : Math.random() < 0.6 ? "Low" : "Medium";
-
   let message = "";
   switch (type) {
     case "Power":
@@ -57,7 +63,6 @@ function makeAlert() {
     default:
       message = `Status update for ${room}`;
   }
-
   return {
     id: crypto.randomUUID(),
     type,
@@ -68,10 +73,10 @@ function makeAlert() {
   };
 }
 
-/* ------------------------------- component -------------------------------- */
+//main component that makes everything runs and here that i can manage state and display the UI
 export default function Alerts() {
-  const [alerts, setAlerts] = useState([]);     // live feed (staged one-by-one)
-  const [activity, setActivity] = useState([]); // smart home activity (staged)
+  const [alerts, setAlerts] = useState([]);     // live feed alert (staged)
+  const [activity, setActivity] = useState([]); // smart home activity logs(staged)
 
   // static activity list; will reveal items one by one
   const staticActivity = [
@@ -83,14 +88,14 @@ export default function Alerts() {
     { icon: "bi-wifi-off",         action: "Sensor Offline",           details: "Network disconnect",                location: "Kitchen" },
   ];
 
-  /* live arrival of alerts & activity one by one */
+
+  // This is where timing is created for live alert feed
   useEffect(() => {
     const alertInterval = setInterval(() => { // add one alert every 20 seconds
       setAlerts((prev) => [makeAlert(), ...prev].slice(0, 12));
-
     }, 20000); //THIS DECIDES THE SPEED OF ALERT POPPING UP
 
-    // ACTIVITY LOG: reveal one static activity every 20 seconds
+  // This is where timing is created for activity log
     let idx = 0;
     const actInterval = setInterval(() => {
       if (idx < staticActivity.length) {
@@ -107,13 +112,14 @@ export default function Alerts() {
     };
   }, []);
 
-  // KPIs from alerts
+  // KPIs from alerts, counts how many High, Medium, Low severity alerts there are
   const counts = useMemo(() => {
     const c = { High: 0, Medium: 0, Low: 0 };
     alerts.forEach((a) => (c[a.severity] += 1));
     return { ...c, total: alerts.length };
   }, [alerts]);
 
+  // The actual UI rendering, and custom styling for the badge/cards
   return (
     <div
       className="page-wrap"
@@ -159,16 +165,15 @@ export default function Alerts() {
 
       {/* TWO-COLUMN LAYOUT */}
       <div className="row g-4">
-
-        {/* @@@@@@@@@@ Live Alert Feed@@@@@@@@@@@@@@@@@ */}
-
         <div className="col-12 col-lg-6">
           <div className="card shadow-sm border-0" style={{ maxHeight: 420, overflowY: "auto" }}>
             <div className="card-header bg-light fw-semibold">
               <i className="bi bi-activity text-danger me-2"></i>
               Live Alert Feed
             </div>
-            <ul className="list-group list-group-flush">
+
+            {/* @@@@@@@@@ Live Alert Feed @@@@@@@@@@@@ */}
+            <ul className="list-group list-group-flush">  
               {alerts.length === 0 && (
                 <li className="list-group-item text-center text-muted py-3">
                   Waiting for alerts...

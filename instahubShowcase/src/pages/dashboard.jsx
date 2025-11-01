@@ -1,4 +1,4 @@
-import React from "react";
+//This act like the home page, user sees this first 
 import Header from "../components/header.jsx";
 import SensorCards from "../components/sensorcards.jsx";
 import LineChart from "../components/linechart.jsx";

@@ -1,6 +1,7 @@
-// src/pages/sensors.jsx
+// diagnostucs screen
+
 import React, { useState, useEffect } from "react";
-const toF = (c) => (c * 9) / 5 + 32;
+const toF = (c) => (c * 9) / 5 + 32; //helper to convert Celsius to Fahrenheit
 
 export default function Sensors({ rooms, isCelsius }) {
   const [simData, setSimData] = useState([]);

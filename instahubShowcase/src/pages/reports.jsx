@@ -1,3 +1,5 @@
+// This page basically turns raw data given from other files into into nice reports with charts and summaries
+
 import React, { useState, useMemo } from "react";
 import {
   PieChart,
@@ -13,10 +15,12 @@ import {
   CartesianGrid,
 } from "recharts";
 
-export default function Reports({ rooms }) {
+// rooms data is passed from App.jsx
+export default function Reports({ rooms }) { 
   const [range, setRange] = useState("week");
   const COLORS = ["#007bff", "#28a745", "#ffc107", "#dc3545", "#6610f2", "#20c997"];
 
+  //convert rooms data into format suitable for pie chart
   const roomEnergyData = useMemo(
     () =>
       rooms.map((r) => ({
@@ -26,33 +30,41 @@ export default function Reports({ rooms }) {
     [rooms]
   );
 
+  //adds room energy values together and finds which room used the most energy
   const totalEnergy = roomEnergyData.reduce((sum, r) => sum + r.value, 0);
   const topRoom = roomEnergyData.reduce((a, b) => (a.value > b.value ? a : b), {});
 
+
+  //build a dataset for line chart (This Week or This Month dropdown)
   const trendData = useMemo(() => {
     const labels =
       range === "week"
         ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         : Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`);
-
     return labels.map((label) => ({
       label,
       energy: parseFloat((totalEnergy * (0.8 + Math.random() * 0.3)).toFixed(2)),
     }));
   }, [range, totalEnergy]);
 
+  //calculations for summary cards at the top
   const yesterdayEnergy = (totalEnergy * 0.9).toFixed(2);
   const diff = (totalEnergy - yesterdayEnergy).toFixed(2);
   const diffPercent = ((diff / yesterdayEnergy) * 100).toFixed(1);
 
   return (
     <div className="container-fluid px-5 py-4" style={{ maxWidth: "2000px" }}>
+
+
+     {/* Below are the layout components using bootstrap */}
+
       {/* HEADER */}
       <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <h3 className="fw-bold mb-0">
           <i className="bi bi-graph-up-arrow me-2"></i> Energy Reports & Analytics
         </h3>
 
+        {/* RANGE SELECTOR & EXPORT BUTTON */}
         <div className="d-flex align-items-center gap-2">
           <select
             className="form-select form-select-sm"
@@ -78,14 +90,12 @@ export default function Reports({ rooms }) {
             <h2 className="fw-bold">{totalEnergy.toFixed(2)} kWh</h2>
           </div>
         </div>
-
         <div className="col">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Yesterday’s Total</h6>
             <h2>{yesterdayEnergy} kWh</h2>
           </div>
         </div>
-
         <div className="col">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Change</h6>
@@ -95,7 +105,6 @@ export default function Reports({ rooms }) {
             </h2>
           </div>
         </div>
-
         <div className="col">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Top Room</h6>
@@ -105,8 +114,12 @@ export default function Reports({ rooms }) {
         </div>
       </div>
 
+
+
       {/* CHARTS ROW */}
       <div className="row g-4 mb-4">
+
+
         {/* PIE CHART */}
         <div className="col-12 col-lg-6">
           <div className="card shadow-sm border-0 p-4 h-100">
@@ -176,6 +189,7 @@ export default function Reports({ rooms }) {
 
       {/* BREAKDOWN + COMPARISON */}
       <div className="row g-4">
+        
         {/* ENERGY BREAKDOWN */}
         <div className="col-12 col-xl-5">
           <div className="card shadow-sm border-0 p-4 h-100">
