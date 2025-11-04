@@ -66,6 +66,7 @@ This project was built as a personal learning and a portfolio showcase of the po
 
 ❗️**TEMPORARY MESSAGE:** this project is still under development❗️
 
+For now this is NOT mobile compatbible, learned this the hard way. Ill work on it soon 
 
 There will be some minor changes and features yet to be added, I will continue to work on this project since i feel like theres still more to add and fix. I will keep updating this repository, or maybe you can fork this and drop some of your ideas if anyone reads this! 😁 
 
