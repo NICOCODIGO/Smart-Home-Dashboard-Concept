@@ -146,16 +146,10 @@ export default function Settings({ isCelsius, setIsCelsius }) {
           <i className="bi bi-tools me-2 text-danger"></i>
           System Actions
         </div>
-        <div className="card-body text-center">
-          <button className="btn btn-outline-primary me-2">
-            <i className="bi bi-cloud-download me-1"></i> Backup Data
-          </button>
-          <button className="btn btn-outline-warning me-2">
-            <i className="bi bi-arrow-repeat me-1"></i> Restore Defaults
-          </button>
-          <button className="btn btn-outline-danger">
-            <i className="bi bi-power me-1"></i> Restart System
-          </button>
+        <div className="system-actions">
+          <button className="btn btn-outline-primary">Backup Data</button>
+          <button className="btn btn-outline-warning">Restore Defaults</button>
+          <button className="btn btn-outline-danger">Restart System</button>
         </div>
         <div className="card-footer text-muted small text-center">
           Any changes you make here are saved automatically.

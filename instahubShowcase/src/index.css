@@ -69,3 +69,183 @@ body {
 .alert-banner-container .toast .toast-header {
   background: transparent;
 }
+
+/* Desktop: leave space for fixed sidebar */
+@media (min-width: 992px) {
+  .app-main {
+    margin-left: 240px;
+  }
+}
+/* ---------- LAYOUT ---------- */
+@media (min-width: 992px) {
+  .app-main {
+    margin-left: 240px;
+  }
+}
+@media (max-width: 992px) {
+  .sidebar {
+    left: -240px;
+    transition: all 0.3s ease;
+  }
+  .sidebar.start-0 { left: 0; }
+  .sidebar.start-n100 { left: -240px; }
+  .app-main {
+    margin-left: 0 !important;
+    padding-top: 70px;
+  }
+}
+
+/* ---------- CHARTS ---------- */
+.recharts-responsive-container {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 280px;
+}
+@media (max-width: 576px) {
+  .recharts-responsive-container {
+    min-height: 240px;
+  }
+}
+
+/* ---------- ENERGY BREAKDOWN ---------- */
+.energy-breakdown .row > div {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+@media (max-width: 768px) {
+  .energy-breakdown .row > div {
+    flex: 0 0 100%;
+    max-width: 100%;
+    text-align: center;
+  }
+}
+
+/* ---------- SYSTEM ACTION BUTTONS ---------- */
+.system-actions .btn {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.system-actions .btn:last-child {
+  margin-bottom: 0;
+}
+@media (min-width: 768px) {
+  .system-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  .system-actions .btn {
+    width: auto;
+    margin-bottom: 0;
+  }
+}
+
+/* ---------- TABLES ---------- */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+@media (max-width: 768px) {
+  table.table {
+    font-size: 0.85rem;
+  }
+  table.table th,
+  table.table td {
+    white-space: nowrap;
+  }
+}
+.table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+.table-responsive::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+/* ---- FIX RECHARTS CONTAINER SIZE ---- */
+.chart-card {
+  width: 100%;
+}
+
+.chart-card .recharts-wrapper {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 300px;
+}
+
+@media (max-width: 576px) {
+  .chart-card .recharts-wrapper {
+    min-height: 260px;
+  }
+}
+
+/* Optional: make charts centered */
+.chart-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Fix chart responsiveness */
+.chart-card .recharts-wrapper {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 300px;
+}
+
+@media (max-width: 576px) {
+  .chart-card .recharts-wrapper {
+    min-height: 260px;
+  }
+}
+
+/* --- Recharts visibility fix --- */
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 360px;              /* ✅ forces a real drawing area */
+}
+
+@media (max-width: 768px) {
+  .chart-wrapper { height: 300px; }
+}
+
+/* Kill any accidental horizontal scrolling everywhere */
+html, body, #root { overflow-x: hidden; }
+
+/* Main area never pushes wider than the phone */
+.app-main { max-width: 100%; overflow-x: hidden; }
+
+/* Header: allow children to wrap and never stretch wider than screen */
+.header-bar { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  flex-wrap: wrap;       /* wraps on small screens */
+}
+
+/* Title shrinks and truncates instead of pushing layout sideways */
+.header-title {
+  flex: 1 1 140px;
+  min-width: 0;          /* lets text-truncate work */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Search input grows but won’t force overflow */
+.header-search {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+/* Avatar stays compact, anchored to the right */
+.header-avatar { 
+  flex: 0 0 auto; 
+  margin-left: auto; 
+}
+
+/* On very small screens, make the search take the full row */
+@media (max-width: 576px) {
+  .header-search { flex: 1 1 100%; width: 100%; }
+}

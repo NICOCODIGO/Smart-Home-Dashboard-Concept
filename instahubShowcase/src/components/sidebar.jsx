@@ -1,52 +1,69 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function Sidebar({ active, setActive }) {
+  const [isOpen, setIsOpen] = useState(false);
   const menu = [
     { name: "Dashboard", icon: "bi-speedometer2" },
-    { name: "Sensors",   icon: "bi-cpu" },
-    { name: "Reports",   icon: "bi-bar-chart-line" },
-    { name: "Alerts",    icon: "bi-bell" },
-    { name: "Settings",  icon: "bi-gear" },
+    { name: "Sensors", icon: "bi-cpu" },
+    { name: "Reports", icon: "bi-bar-chart-line" },
+    { name: "Alerts", icon: "bi-bell" },
+    { name: "Settings", icon: "bi-gear" },
   ];
 
   return (
-    <aside
-      className="app-sidebar d-flex flex-column bg-dark text-white p-3"
-      style={{ width: "220px" }}
-    >
-      {/* Brand */}
-      <div className="d-flex align-items-center mb-3">
-        <i className="bi bi-moon-stars fs-4 me-2" />
-        <h5 className="mb-0">SmartSense</h5>
-      </div>
+    <>
+      {/* Hamburger for mobile */}
+      <button
+        className="btn btn-outline-secondary d-lg-none position-fixed top-0 start-0 m-3 z-3"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <i className={`bi ${isOpen ? "bi-x-lg" : "bi-list"} fs-4`}></i>
+      </button>
 
-      {/* Nav */}
-      <ul className="nav flex-column mb-auto">
-        {menu.map((item) => {
-          const isActive = active === item.name;
-          return (
-            <li key={item.name} className="nav-item mb-1">
+      {/* Sidebar */}
+      <div
+        className={`sidebar bg-dark text-white p-3 vh-100 position-fixed top-0 ${
+          isOpen ? "start-0" : "start-n100"
+        }`}
+        style={{
+          width: "240px",
+          zIndex: 1040,
+          transition: "all 0.3s ease",
+        }}
+      >
+        <div className="d-flex align-items-center mb-4">
+          <i className="bi bi-moon-stars fs-4 me-2"></i>
+          <h5 className="mb-0">SmartSense</h5>
+        </div>
+
+        <ul className="nav flex-column">
+          {menu.map((item) => (
+            <li key={item.name} className="nav-item mb-2">
               <button
-                onClick={() => setActive(item.name)}
-                className={`nav-link w-100 text-start border-0 d-flex align-items-center px-2 py-2 rounded
-                  ${isActive ? "bg-primary text-white" : "text-secondary"}`}
-                style={{ transition: "background .15s ease" }}
+                className={`btn w-100 text-start d-flex align-items-center ${
+                  active === item.name ? "btn-primary" : "btn-outline-light"
+                }`}
+                onClick={() => {
+                  setActive(item.name);
+                  setIsOpen(false);
+                }}
               >
                 <i className={`bi ${item.icon} me-2`} />
                 {item.name}
               </button>
             </li>
-          );
-        })}
-      </ul>
-
-      {/* Footer */}
-      <div className="mt-auto pt-3 border-top border-secondary-subtle">
-        <button className="btn btn-outline-light btn-sm w-100">
-          <i className="bi bi-box-arrow-right me-2" />
-          Logout
-        </button>
+          ))}
+        </ul>
       </div>
-    </aside>
+
+      {/* Overlay when open */}
+      {isOpen && (
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"
+          style={{ zIndex: 1030 }}
+          onClick={() => setIsOpen(false)}
+        ></div>
+      )}
+    </>
   );
 }

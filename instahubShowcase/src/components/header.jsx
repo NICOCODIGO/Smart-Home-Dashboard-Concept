@@ -1,17 +1,18 @@
 // src/components/header.jsx
 import React from "react";
 
-export default function Header({ username }) {
+export default function Header({ username = "User" }) {
   return (
-    <header className="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <h2 className="fw-bold mb-0">Hello, {username} 👋</h2>
+    <header className="header-bar mb-4">
+      {/* --- Left side greeting --- */}
+      <div className="header-title">
+        <h2 className="fw-bold mb-0 text-truncate">Hey, {username} 👋</h2>
         <p className="text-secondary mb-0">SmartSense Dashboard</p>
       </div>
 
-      <div className="d-flex align-items-center gap-3">
-        {/* --- Search --- */}
-        <div className="input-group" style={{ width: "220px" }}>
+      {/* --- Search input --- */}
+      <div className="header-search">
+        <div className="input-group">
           <span className="input-group-text bg-light border-0">
             <i className="bi bi-search"></i>
           </span>
@@ -21,14 +22,11 @@ export default function Header({ username }) {
             placeholder="Search..."
           />
         </div>
+      </div>
 
-        {/* --- Profile Avatar --- */}
-        <div
-          className="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-semibold"
-          style={{ width: "40px", height: "40px" }}
-        >
-          {username[0]}
-        </div>
+      {/* --- Profile Avatar --- */}
+      <div className="header-avatar rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-semibold">
+        {username.charAt(0).toUpperCase()}
       </div>
     </header>
   );

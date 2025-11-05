@@ -34,7 +34,6 @@ export default function Reports({ rooms }) {
   const totalEnergy = roomEnergyData.reduce((sum, r) => sum + r.value, 0);
   const topRoom = roomEnergyData.reduce((a, b) => (a.value > b.value ? a : b), {});
 
-
   //dataset for line chart (This Week or This Month dropdown)
   const trendData = useMemo(() => {
     const labels =
@@ -48,15 +47,13 @@ export default function Reports({ rooms }) {
   }, [range, totalEnergy]);
 
   //Calculates the summary numbers for the top report cards 
-  const yesterdayEnergy = (totalEnergy * 0.9).toFixed(2); //pretending that energy was used less the day before (0.9)
-  const diff = (totalEnergy - yesterdayEnergy).toFixed(2); //difference between today (totalEnergy) and yesterday
-  const diffPercent = ((diff / yesterdayEnergy) * 100).toFixed(1); //percentage difference between today and yesterday
+  const yesterdayEnergy = (totalEnergy * 0.9).toFixed(2); 
+  const diff = (totalEnergy - yesterdayEnergy).toFixed(2); 
+  const diffPercent = ((diff / yesterdayEnergy) * 100).toFixed(1); 
 
   return (
     <div className="container-fluid px-5 py-4" style={{ maxWidth: "2000px" }}>
-
-
-     {/* Below are the layout components using bootstrap */}
+      {/* Below are the layout components using bootstrap */}
 
       {/* HEADER */}
       <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
@@ -72,22 +69,18 @@ export default function Reports({ rooms }) {
             onChange={(e) => setRange(e.target.value)}
             style={{ width: "160px" }}
           >
-            {/* drop down menu created here */}
             <option value="week">This Week</option>
             <option value="month">This Month</option>
           </select>
   
-          {/* fake export button that does nothing */}
           <button className="btn btn-outline-secondary btn-sm">
             <i className="bi bi-download me-1"></i> Export
           </button>
         </div>
       </div>
 
-      {/* Summary Cards Division Area is created */}
+      {/* Summary Cards Division Area */}
       <div className="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4 mb-4">
-
-        {/* Card 1 */}
         <div className="col">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Total Energy Today</h6>
@@ -95,7 +88,6 @@ export default function Reports({ rooms }) {
           </div>
         </div>
 
-        {/* Card 2 */}
         <div className="col">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Yesterday’s Total</h6>
@@ -103,7 +95,6 @@ export default function Reports({ rooms }) {
           </div>
         </div>
 
-        {/* Card 3 */}
         <div className="col">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Change</h6>
@@ -114,7 +105,6 @@ export default function Reports({ rooms }) {
           </div>
         </div>
 
-        {/* Card 4 */}
         <div className="col">
           <div className="card shadow-sm border-0 p-4 text-center h-100">
             <h6 className="text-muted">Top Room</h6>
@@ -124,47 +114,31 @@ export default function Reports({ rooms }) {
         </div>
       </div>
 
-
-
-      {/*Charts Row division area layout is created here*/}
+      {/* Charts Row */}
       <div className="row g-4 mb-4">
-
-
         {/* PIE CHART */}
-        <div className="col-12 col-lg-6">
+        <div className="col-12 col-lg-6 mb-4">
           <div className="card shadow-sm border-0 p-4 h-100">
             <h5 className="fw-bold text-center mb-3">Room Energy Distribution</h5>
-            <div style={{ width: "100%", height: "400px" }}>
+            <div className="chart-wrapper">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart> {/*from Rechart.js */}
+                <PieChart>
                   <Pie
-                  s
-                  data={roomEnergyData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  innerRadius="40%"
-                  outerRadius="70%"
-                  labelLine={false}
-                  label={({ name, percent }) =>
-                    `${(percent * 100).toFixed(1)}%`
-        
-  } 
->
-                    {roomEnergyData.map((entry, index) => (
-                      <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                    data={roomEnergyData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius="40%"
+                    outerRadius="70%"
+                    label={({ percent }) => `${(percent * 100).toFixed(1)}%`}
+                  >
+                    {roomEnergyData.map((entry, i) => (
+                      <Cell key={i} fill={COLORS[i % COLORS.length]} />
                     ))}
                   </Pie>
-
-                  {/* move legend BELOW and make it horizontal */}
                   <Tooltip />
-                  <Legend
-                    layout="horizontal"
-                    verticalAlign="bottom"
-                    align="center"
-                    wrapperStyle={{ marginTop: "20px" }}
-                  />
+                  <Legend layout="horizontal" verticalAlign="bottom" align="center" />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -172,43 +146,41 @@ export default function Reports({ rooms }) {
         </div>
 
         {/* LINE CHART */}
-        <div className="col-12 col-lg-6">
+        <div className="col-12 col-lg-6 mb-4">
           <div className="card shadow-sm border-0 p-4 h-100">
             <h5 className="fw-bold text-center mb-3">
               {range === "week" ? "Weekly Energy Trend" : "Monthly Energy Trend"}
             </h5>
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart
-                data={trendData}
-                margin={{ top: 10, right: 30, left: 10, bottom: 20 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="label" tick={{ fontSize: 12 }} />
-                <YAxis />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="energy"
-                  stroke="#007bff"
-                  strokeWidth={2}
-                  dot={{ r: 3 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <div className="chart-wrapper">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={trendData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="label" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="energy"
+                    stroke="#007bff"
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       </div>
 
       {/* BREAKDOWN + COMPARISON */}
       <div className="row g-4">
-        
         {/* ENERGY BREAKDOWN */}
         <div className="col-12 col-xl-5">
           <div className="card shadow-sm border-0 p-4 h-100">
             <h5 className="fw-bold mb-3">
               <i className="bi bi-lightning-charge me-2"></i> Energy Breakdown
             </h5>
-            <div className="row text-center">
+            <div className="row text-center energy-breakdown">
               <div className="col-6 mb-3">
                 <h6 className="text-muted">Peak Hour</h6>
                 <h5 className="fw-semibold">6:00 PM - 9:00 PM</h5>
@@ -235,39 +207,41 @@ export default function Reports({ rooms }) {
             <h5 className="fw-bold mb-3">
               <i className="bi bi-bar-chart-line me-2"></i> Comparison Overview
             </h5>
-            <table className="table table-striped align-middle">
-              <thead className="table-light">
-                <tr>
-                  <th>Room</th>
-                  <th>Energy (Today)</th>
-                  <th>Energy (Yesterday)</th>
-                  <th>Change (%)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rooms.map((r, i) => {
-                  const yesterday = r.kWhToday * 0.9;
-                  const change = ((r.kWhToday - yesterday) / yesterday) * 100;
-                  return (
-                    <tr key={i}>
-                      <td>{r.name}</td>
-                      <td>{r.kWhToday.toFixed(2)} kWh</td>
-                      <td>{yesterday.toFixed(2)} kWh</td>
-                      <td
-                        className={
-                          change >= 0
-                            ? "text-danger fw-semibold"
-                            : "text-success fw-semibold"
-                        }
-                      >
-                        {change >= 0 ? "+" : ""}
-                        {change.toFixed(1)}%
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <div className="table-responsive">
+              <table className="table table-striped align-middle">
+                <thead className="table-light">
+                  <tr>
+                    <th>Room</th>
+                    <th>Energy (Today)</th>
+                    <th>Energy (Yesterday)</th>
+                    <th>Change (%)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rooms.map((r, i) => {
+                    const yesterday = r.kWhToday * 0.9;
+                    const change = ((r.kWhToday - yesterday) / yesterday) * 100;
+                    return (
+                      <tr key={i}>
+                        <td>{r.name}</td>
+                        <td>{r.kWhToday.toFixed(2)} kWh</td>
+                        <td>{yesterday.toFixed(2)} kWh</td>
+                        <td
+                          className={
+                            change >= 0
+                              ? "text-danger fw-semibold"
+                              : "text-success fw-semibold"
+                          }
+                        >
+                          {change >= 0 ? "+" : ""}
+                          {change.toFixed(1)}%
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
